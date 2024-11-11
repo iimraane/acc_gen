@@ -9,7 +9,7 @@ async def main():
     # Générer des comptes et les enregistrer
     for _ in range(10):
         email, password = account_generator.generate_account()
-        discord_register.register_account(email, password)
+        await discord_register.register_account(email, password)
         
     # Fermer le navigateur
     await discord_register.close_browser()
