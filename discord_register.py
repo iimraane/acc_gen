@@ -2,13 +2,24 @@ import asyncio
 from playwright.async_api import async_playwright
 import time
 import pyautogui
+import os
 
 class DiscordRegistration:
     def __init__(self, account_generator):
         self.account_generator = account_generator
-        self.extension_path = "C:/Users/windos 10/Desktop/Discord/tools/acc_gen/extension"
+        self.extension_path = os.path.join(os.path.dirname(__file__), "extension")
         self.browser = None
         self.page = None
+
+    async def launch_browser(self):
+        async with async_playwright() as p:
+            user_data_dir = os.path.join(os.path.dirname(__file__), "extension", "user_data")
+            browser = await p.chromium.launch_persistent_context(
+                user_data_dir=user_data_dir,
+                headless=False,
+                args=[f"--disable-extensions-except={self.extension_path}", f"--load-extension={self.extension_path}", "--disable-blink-features=AutomationControlled", "--enable-automation", "--no-first-run", "--no-default-browser-check"]
+            )
+            return browser
 
     async def register_account(self, email, password):
         if not self.browser:
@@ -44,14 +55,6 @@ class DiscordRegistration:
 
         await asyncio.sleep(15)
 
-    async def launch_browser(self):
-        async with async_playwright() as p:
-            browser = await p.chromium.launch_persistent_context(
-                user_data_dir="C:/Users/windos 10/Desktop/Discord/tools/acc_gen/extension/user_data",
-                headless=False,
-                args=[f"--disable-extensions-except={self.extension_path}", f"--load-extension={self.extension_path}", "--disable-blink-features=AutomationControlled", "--enable-automation", "--no-first-run", "--no-default-browser-check"]
-            )
-            return browser
 
     async def close_browser(self):
         if self.browser:

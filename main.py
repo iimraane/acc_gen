@@ -1,6 +1,7 @@
 import asyncio
 from account_generator import AccountGenerator
 from discord_register import DiscordRegistration
+import os
 
 async def main():
     account_generator = AccountGenerator()
