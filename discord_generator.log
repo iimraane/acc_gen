@@ -1,0 +1,17 @@
+2024-11-12 20:30:33,679 - INFO - Initialisation du driver Chrome...
+2024-11-12 20:30:33,680 - INFO - ====== WebDriver manager ======
+2024-11-12 20:30:36,702 - INFO - Get LATEST chromedriver version for google-chrome
+2024-11-12 20:30:36,785 - INFO - Get LATEST chromedriver version for google-chrome
+2024-11-12 20:30:36,841 - INFO - There is no [win64] chromedriver "130.0.6723.116" for browser google-chrome "130.0.6723" in cache
+2024-11-12 20:30:36,841 - INFO - Get LATEST chromedriver version for google-chrome
+2024-11-12 20:30:36,992 - INFO - WebDriver version 130.0.6723.116 selected
+2024-11-12 20:30:36,999 - INFO - Modern chrome version https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.116/win32/chromedriver-win32.zip
+2024-11-12 20:30:37,000 - INFO - About to download new driver from https://storage.googleapis.com/chrome-for-testing-public/130.0.6723.116/win32/chromedriver-win32.zip
+2024-11-12 20:30:37,098 - INFO - Driver downloading response is 200
+2024-11-12 20:30:37,336 - INFO - Get LATEST chromedriver version for google-chrome
+2024-11-12 20:30:37,488 - INFO - Driver has been saved in cache [C:\Users\carla\.wdm\drivers\chromedriver\win64\130.0.6723.116]
+2024-11-12 20:30:38,779 - INFO - Tentative de création du compte 1/1
+2024-11-12 20:30:38,779 - INFO - Début de la création du compte: 242nqa8kx7@gmail.com
+2024-11-12 20:30:48,547 - WARNING - Échec possible de la création: https://discord.com/register
+2024-11-12 20:30:51,360 - INFO - Création terminée. Comptes créés avec succès: 0/1
+2024-11-12 20:30:53,595 - INFO - Driver Chrome fermé
