@@ -6,14 +6,12 @@ import os
 async def main():
     account_generator = AccountGenerator()
     discord_register = DiscordRegistration(account_generator)
-    
-    # Générer des comptes et les enregistrer
-    for _ in range(10):
-        email, password = account_generator.generate_account()
-        await discord_register.register_account(email, password)
-        
-    # Fermer le navigateur
-    await discord_register.close_browser()
+
+    async with discord_register:
+        # Générer des comptes et les enregistrer
+        for _ in range(10):
+            email, password = account_generator.generate_account()
+            discord_register.register_account(email, password)
 
 if __name__ == "__main__":
     asyncio.run(main())

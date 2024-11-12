@@ -1,3 +1,2 @@
-2024/11/11-13:27:48.330 35f0 Reusing MANIFEST C:\Users\windos 10\Desktop\Discord\tools\acc_gen\extension\user_data\Default\Service Worker\Database/MANIFEST-000001
-2024/11/11-13:27:48.340 35f0 Recovering log #3
-2024/11/11-13:27:48.344 35f0 Reusing old log C:\Users\windos 10\Desktop\Discord\tools\acc_gen\extension\user_data\Default\Service Worker\Database/000003.log 
+2024/11/11-17:33:19.931 223c Creating DB C:\Users\carla\Downloads\acc_gen-main\acc_gen-main\extension\user_data\Default\Service Worker\Database since it was missing.
+2024/11/11-17:33:19.945 223c Reusing MANIFEST C:\Users\carla\Downloads\acc_gen-main\acc_gen-main\extension\user_data\Default\Service Worker\Database/MANIFEST-000001
