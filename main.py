@@ -1,8 +1,7 @@
-import asyncio
 import logging
 import random
 import string
-import sys
+import time
 from datetime import datetime
 from pathlib import Path
 from typing import Tuple
@@ -33,7 +32,6 @@ class AccountGenerator:
         digits = string.digits
         special_chars = "!@#$%^&*"
         
-        # Au moins un de chaque
         password = [
             random.choice(lowercase),
             random.choice(uppercase),
@@ -41,7 +39,6 @@ class AccountGenerator:
             random.choice(special_chars)
         ]
         
-        # Compléter avec des caractères aléatoires
         all_chars = lowercase + uppercase + digits + special_chars
         password.extend(random.choices(all_chars, k=length-4))
         random.shuffle(password)
@@ -62,52 +59,95 @@ class DiscordRegistration:
         self.options.add_argument('--no-sandbox')
         self.options.add_argument('--start-maximized')
         self.options.add_argument('--disable-blink-features=AutomationControlled')
+        self.options.add_argument('--disable-extensions')
+        self.options.add_argument('--disable-gpu')
+        self.options.add_argument('--disable-dev-shm-usage')
         self.options.add_experimental_option('excludeSwitches', ['enable-automation'])
         self.options.add_experimental_option('useAutomationExtension', False)
-        
-        # Ajout de user-agent
         self.options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36')
+        
+    def random_sleep(self, min_time: float = 1, max_time: float = 2):
+        time.sleep(random.uniform(min_time, max_time))
 
     def create_account(self, email: str, password: str) -> bool:
         try:
             service = Service(ChromeDriverManager().install())
             driver = webdriver.Chrome(service=service, options=self.options)
-            wait = WebDriverWait(driver, 15)
+            wait = WebDriverWait(driver, 20)  # Augmenté à 20 secondes
             
             try:
-                # Accéder à la page d'inscription
+                logger.info(f"Tentative de création du compte: {email}")
                 driver.get('https://discord.com/register')
+                self.random_sleep(2, 3)  # Attente après chargement de la page
                 
-                # Attendre que la page soit chargée
+                # Modification du webdriver pour éviter la détection
+                driver.execute_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined})")
+                
+                # Remplir email
                 email_field = wait.until(EC.presence_of_element_located((By.NAME, "email")))
-                
-                # Remplir le formulaire
                 email_field.send_keys(email)
-                driver.find_element(By.NAME, "username").send_keys(email.split('@')[0])
-                driver.find_element(By.NAME, "password").send_keys(password)
+                self.random_sleep()
+                
+                # Remplir username
+                username_field = wait.until(EC.presence_of_element_located((By.NAME, "username")))
+                username_field.clear()
+                username_field.send_keys(email.split('@')[0])
+                self.random_sleep()
+                
+                # Remplir password
+                password_field = wait.until(EC.presence_of_element_located((By.NAME, "password")))
+                password_field.send_keys(password)
+                self.random_sleep()
                 
                 # Date de naissance
-                asyncio.sleep(1)
-                day = wait.until(EC.presence_of_element_located((By.ID, "react-select-2-input")))
-                day.send_keys(str(random.randint(1, 28)) + Keys.ENTER)
-                
-                month = wait.until(EC.presence_of_element_located((By.ID, "react-select-3-input")))
-                month.send_keys(str(random.randint(1, 12)) + Keys.ENTER)
-                
-                year = wait.until(EC.presence_of_element_located((By.ID, "react-select-4-input")))
-                year.send_keys(str(random.randint(1990, 2000)) + Keys.ENTER)
+                try:
+                    # Jour
+                    day = wait.until(EC.presence_of_element_located((By.ID, "react-select-2-input")))
+                    day.send_keys(str(random.randint(1, 28)))
+                    day.send_keys(Keys.ENTER)
+                    self.random_sleep()
+                    
+                    # Mois
+                    month = wait.until(EC.presence_of_element_located((By.ID, "react-select-3-input")))
+                    month.send_keys(str(random.randint(1, 12)))
+                    month.send_keys(Keys.ENTER)
+                    self.random_sleep()
+                    
+                    # Année
+                    year = wait.until(EC.presence_of_element_located((By.ID, "react-select-4-input")))
+                    year.send_keys(str(random.randint(1990, 2000)))
+                    year.send_keys(Keys.ENTER)
+                    self.random_sleep()
+                    
+                except Exception as e:
+                    logger.error(f"Erreur lors du remplissage de la date: {str(e)}")
+                    return False
                 
                 # CGU
-                checkboxes = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR, "input[type='checkbox']")))
-                if checkboxes:
-                    driver.execute_script("arguments[0].click();", checkboxes[-1])
+                try:
+                    checkboxes = wait.until(EC.presence_of_all_elements_located(
+                        (By.CSS_SELECTOR, "input[type='checkbox']")))
+                    if checkboxes:
+                        driver.execute_script("arguments[0].click(); arguments[0].checked = true;", checkboxes[-1])
+                    self.random_sleep()
+                except Exception as e:
+                    logger.error(f"Erreur avec les CGU: {str(e)}")
+                    try:
+                        tos_element = wait.until(EC.presence_of_element_located(
+                            (By.XPATH, "//div[contains(@class, 'checkboxWrapper')]")))
+                        driver.execute_script("arguments[0].click();", tos_element)
+                    except Exception as e:
+                        logger.error(f"Échec de la validation des CGU: {str(e)}")
+                        return False
                 
                 # Soumettre
-                submit_button = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "button[type='submit']")))
+                submit_button = wait.until(EC.element_to_be_clickable(
+                    (By.CSS_SELECTOR, "button[type='submit']")))
                 driver.execute_script("arguments[0].click();", submit_button)
                 
-                # Vérifier le résultat
-                asyncio.sleep(5)
+                # Attente et vérification
+                self.random_sleep(8, 10)  # Attente plus longue pour la redirection
+                
                 if "/channels" in driver.current_url or "/app" in driver.current_url:
                     self._save_account(email, password)
                     logger.info(f"Compte créé avec succès: {email}")
@@ -146,10 +186,10 @@ def main():
                 successful += 1
                 
             # Délai entre les créations
-            if i < num_accounts - 1:  # Ne pas attendre après le dernier compte
-                delay = random.uniform(2, 4)
+            if i < num_accounts - 1:
+                delay = random.uniform(3, 5)
                 logger.info(f"Attente de {delay:.1f} secondes avant la prochaine création")
-                asyncio.sleep(delay)
+                time.sleep(delay)
         
         logger.info(f"\nCréation terminée. Comptes créés avec succès: {successful}/{num_accounts}")
         
