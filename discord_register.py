@@ -36,17 +36,11 @@ class DiscordRegistration:
 
         # Sélectionner la date de naissance
         time.sleep(10)
-        pyautogui.click(708, 914)
-        pyautogui.write(self.account_generator.get_birthdate().split()[0])
-        
-        time.sleep(0.01)
-        pyautogui.click(902, 911)
-        pyautogui.write(self.account_generator.get_birthdate().split()[1])
-                        
-        time.sleep(0.01)
-        pyautogui.click(1126, 912)
-        pyautogui.write(self.account_generator.get_birthdate().split()[2])
-        
+
+        self.page.select_option('select#day', '5') # Sélection du mois 
+        self.page.select_option('select#month', '1') # Sélection de l'année 
+        self.page.select_option('select#year', '1990')
+
         # Cocher les conditions d'utilisation et soumettre le formulaire
         await self.page.click('label:has-text("J\'ai lu et accepté les Conditions d\'Utilisation")')
         await self.page.click('button:has-text("Continuer")')
