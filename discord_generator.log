@@ -15,3 +15,37 @@
 2024-11-12 20:30:48,547 - WARNING - Échec possible de la création: https://discord.com/register
 2024-11-12 20:30:51,360 - INFO - Création terminée. Comptes créés avec succès: 0/1
 2024-11-12 20:30:53,595 - INFO - Driver Chrome fermé
+2024-11-16 09:25:49,284 - INFO - Création du compte 1/1
+2024-11-16 09:25:49,284 - INFO - ====== WebDriver manager ======
+2024-11-16 09:25:52,529 - INFO - Get LATEST chromedriver version for google-chrome
+2024-11-16 09:25:52,593 - INFO - Get LATEST chromedriver version for google-chrome
+2024-11-16 09:25:52,661 - INFO - Driver [C:\Users\carla\.wdm\drivers\chromedriver\win64\130.0.6723.116\chromedriver-win32/chromedriver.exe] found in cache
+2024-11-16 09:26:02,051 - INFO - Début de création du compte: ttrty355xf@gmail.com
+2024-11-16 09:26:04,714 - ERROR - Erreur lors de la configuration de Nopecha: Message: javascript error: localStorage is not defined
+  (Session info: chrome=130.0.6723.117)
+Stacktrace:
+	GetHandleVerifier [0x00F7EBD3+24307]
+	(No symbol) [0x00F08D74]
+	(No symbol) [0x00DEC323]
+	(No symbol) [0x00DF1DA0]
+	(No symbol) [0x00DF389D]
+	(No symbol) [0x00E6A377]
+	(No symbol) [0x00E4FE8C]
+	(No symbol) [0x00E69579]
+	(No symbol) [0x00E4FC26]
+	(No symbol) [0x00E2219C]
+	(No symbol) [0x00E2311D]
+	GetHandleVerifier [0x01228D93+2818227]
+	GetHandleVerifier [0x0128542E+3196750]
+	GetHandleVerifier [0x0127D9D2+3165426]
+	GetHandleVerifier [0x0101DA70+675216]
+	(No symbol) [0x00F11B3D]
+	(No symbol) [0x00F0EA18]
+	(No symbol) [0x00F0EBB5]
+	(No symbol) [0x00F01640]
+	BaseThreadInitThunk [0x76B35D49+25]
+	RtlInitializeExceptionChain [0x7764CEBB+107]
+	RtlGetAppContainerNamedObjectPath [0x7764CE41+561]
+
+2024-11-16 09:26:25,615 - WARNING - Échec de création du compte: ttrty355xf@gmail.com
+2024-11-16 09:26:31,952 - INFO - Création terminée. Comptes créés avec succès: 0/1
