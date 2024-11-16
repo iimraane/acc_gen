@@ -8,6 +8,7 @@ from typing import Tuple, Optional
 from dataclasses import dataclass
 import json
 from selenium import webdriver
+from selenium import *
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
