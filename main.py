@@ -247,7 +247,7 @@ class DiscordRegistration:
         endpoint = "https://api.nopecha.com/solve/hcaptcha"
         payload = {
             "key": nopcha_key,
-            "site_key": site_key,
+            "site_key": "a9b5fb07-92ff-493f-86fe-352a2803b3df",
             "url": "https:discord.com/register"
         }
 
