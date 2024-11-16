@@ -241,7 +241,7 @@ class DiscordRegistration:
             (By.CSS_SELECTOR, "button[type='submit']")))
         driver.execute_script("arguments[0].click();", submit_button)
     
-    def _solve_captcha(self, driver: webdriver.Chrome, wait: WebDriverWait, nopcha_key):
+    def _solve_captcha(nopcha_key):
     
     
         endpoint = "https://api.nopecha.com/solve/hcaptcha"
@@ -258,8 +258,20 @@ class DiscordRegistration:
 
             if 'token' in result:
                 return result['token']
-            else:
-                return f"Erreur: {result.get('error', 'Réponse inattendue')}"
+        except requests.exceptions.RequestException as e:
+            return f"Erreur lors de la soumission: {e}"
+
+    def submit_form_with_token(url, token):
+        payload = {
+            "h-captcha-response": token
+        }
+
+        try:
+            response = requests.post(url, data=payload)
+            response.raise_for_status()
+            return response.text
+        except requests.exceptions.RequestException as e:
+            return f"Erreur lors de la soumission: {e}"
 
         except requests.exceptions.RequestException as e:
             return f"Erreur de connexion: {e}"
