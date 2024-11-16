@@ -17,7 +17,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.service import Service
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from webdriver_manager.chrome import ChromeDriverManager
-import requests
+import json
+import os
 
 # Configuration du logging avec rotation des fichiers
 logging.basicConfig(
@@ -113,8 +114,9 @@ class DiscordRegistration:
         if proxy:
             options.add_argument(f'--proxy-server={proxy}')
 
-        # Configuration de Nopecha
-        options.add_argument('--load-extension=./extension/nopecha')
+
+        extension_path = os.path.join(os.getcwd(), "extension")
+        options.add_argument(f'--load-extension={extension_path}')
         
         options.add_experimental_option('excludeSwitches', ['enable-automation'])
         options.add_experimental_option('useAutomationExtension', False)
@@ -133,6 +135,7 @@ class DiscordRegistration:
             config_path = f"extension/config.json"
             with open(config_path, "w") as config_file:
                 json.dump({"api_key": nopecha_key}, config_file)
+
         except Exception as e:
             logger.error(f"Erreur lors de la configuration de Nopecha: {str(e)}")
 
@@ -244,41 +247,6 @@ class DiscordRegistration:
         submit_button = wait.until(EC.element_to_be_clickable(
             (By.CSS_SELECTOR, "button[type='submit']")))
         driver.execute_script("arguments[0].click();", submit_button)
-    
-    def _solve_captcha(nopcha_key):
-    
-    
-        endpoint = "https://api.nopecha.com/solve/hcaptcha"
-        payload = {
-            "key": nopcha_key,
-            "site_key": "a9b5fb07-92ff-493f-86fe-352a2803b3df",
-            "url": "https:discord.com/register"
-        }
-
-        try:
-            response = requests.post(endpoint, json=payload)
-            response.raise_for_status()
-            result = response.json()
-
-            if 'token' in result:
-                return result['token']
-        except requests.exceptions.RequestException as e:
-            return f"Erreur lors de la soumission: {e}"
-
-    def submit_form_with_token(url, token):
-        payload = {
-            "h-captcha-response": token
-        }
-
-        try:
-            response = requests.post(url, data=payload)
-            response.raise_for_status()
-            return response.text
-        except requests.exceptions.RequestException as e:
-            return f"Erreur lors de la soumission: {e}"
-
-        except requests.exceptions.RequestException as e:
-            return f"Erreur de connexion: {e}"
 
     def _verify_registration(self, driver: webdriver.Chrome, wait: WebDriverWait) -> bool:
         """Vérifie si l'inscription a réussi."""
