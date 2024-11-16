@@ -121,7 +121,7 @@ class DiscordRegistration:
 
         return options
 
-    def _configure_nopecha(self, driver: webdriver.Chrome):
+    def _configure_nopecha(self, driver: webdriver.Chrome, nopecha_key):
         """Configure l'extension Nopecha avec la clé API."""
         try:
             # Injection de la configuration Nopecha
@@ -129,6 +129,10 @@ class DiscordRegistration:
                 localStorage.setItem('nopecha_key', '{self.nopecha_key}');
                 localStorage.setItem('nopecha_auto', 'true');
             """)
+            # Ajouter la clé API au fichier config.json de l'extension
+            config_path = f"extension/config.json"
+            with open(config_path, "w") as config_file:
+                json.dump({"api_key": nopecha_key}, config_file)
         except Exception as e:
             logger.error(f"Erreur lors de la configuration de Nopecha: {str(e)}")
 
